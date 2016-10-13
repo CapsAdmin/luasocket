@@ -73,6 +73,15 @@ LUAPREFIX_mingw?=/usr
 CDIR_mingw?=lua/$(LUAV)
 LDIR_mingw?=lua/$(LUAV)/lua
 
+# where lua headers are found for msys2 builds
+# LUAINC_msys2:
+LUAINC_msys2?=/mingw64/include
+LUALIB_msys2?=/mingw64/bin/lua$(subst .,,$(LUAV)).dll
+LUAPREFIX_msys2?=/mingw64
+CDIR_msys2?=lib/lua/$(LUAV)
+LDIR_msys2?=share/lua/$(LUAV)
+
+
 
 # LUAINC_win32:
 # LUALIB_win32:
@@ -141,7 +150,7 @@ print:
 #------
 # Supported platforms
 #
-PLATS= macosx linux win32 mingw solaris
+PLATS= macosx linux win32 mingw solaris msys2
 
 #------
 # Compiler and linker settings
@@ -221,6 +230,22 @@ CFLAGS_mingw= -I$(LUAINC) $(DEF) -Wall -O2 -fno-common \
 LDFLAGS_mingw= $(LUALIB) -shared -Wl,-s -lws2_32 -o 
 LD_mingw=gcc
 SOCKET_mingw=wsocket.o
+
+#------
+# Compiler and linker settings
+# for msys2
+SO_msys2=dll
+O_msys2=o
+CC_msys2=gcc
+DEF_msys2= -DLUASOCKET_INET_PTON -DLUASOCKET_$(DEBUG) \
+	-DWINVER=0x0501 -DLUASOCKET_API='__declspec(dllexport)' \
+	-DMIME_API='__declspec(dllexport)'
+CFLAGS_msys2= -I$(LUAINC) $(DEF) -Wall -O2 -fno-common \
+	-fvisibility=hidden
+LDFLAGS_msys2= $(LUALIB) -shared -Wl,-s -lws2_32 -o
+LD_msys2=gcc
+SOCKET_msys2=wsocket.o
+
 
 
 #------
@@ -361,6 +386,9 @@ linux:
 mingw:
 	$(MAKE) all PLAT=mingw
 	
+msys2:
+	$(MAKE) all PLAT=msys2
+
 solaris:
 	$(MAKE) all-unix PLAT=solaris
 
