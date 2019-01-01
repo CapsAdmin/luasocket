@@ -111,7 +111,7 @@ LDIR?=$(LDIR_$(PLAT))
 
 # DESTDIR: (no default)
 # used by package managers to install into a temporary destination
-DESTDIR=
+DESTDIR?=
 
 #------
 # Definitions below can be overridden on the make command line, but
@@ -332,8 +332,8 @@ UNIX_OBJS=\
 	timeout.$(O) \
 	io.$(O) \
 	usocket.$(O) \
-	unixtcp.$(O) \
-	unixudp.$(O) \
+	unixstream.$(O) \
+	unixdgram.$(O) \
 	compat.$(O) \
 	unix.$(O)
 
@@ -414,7 +414,7 @@ $(UNIX_SO): $(UNIX_OBJS)
 $(SERIAL_SO): $(SERIAL_OBJS)
 	$(LD) $(SERIAL_OBJS) $(LDFLAGS)$@
 
-install: 
+install:
 	$(INSTALL_DIR) $(INSTALL_TOP_LDIR)
 	$(INSTALL_DATA) $(TO_TOP_LDIR) $(INSTALL_TOP_LDIR)
 	$(INSTALL_DIR) $(INSTALL_SOCKET_LDIR)
